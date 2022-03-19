@@ -1,0 +1,40 @@
+{
+  "name": "joker-and-the-queen",
+  "build": {
+    "context": "..",
+    "dockerfile": "./Dockerfile"
+  },
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "editor.rulers": [
+      88
+    ],
+    "python.pythonPath": "/usr/local/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.mypyPath": "/usr/local/bin/mypy",
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintPath": "/usr/local/bin/pylint",
+    "python.linting.pylintArgs": [
+      "--enable=unused-import,unused-variable",
+      "--disable=missing-module-docstring",
+      "--max-line-length=88"
+    ],
+    "python.formatting.provider": "black",
+    "python.formatting.blackPath": "/usr/local/bin/black",
+    "editor.formatOnSave": true,
+    "python.testing.pytestArgs": [
+      "."
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true
+  },
+  "extensions": [
+    "ms-python.python",
+    "ms-python.vscode-pylance"
+  ],
+  "mounts": [
+    "source=joker-and-the-queen-bashhistory,target=/commandhistory,type=volume"
+  ]
+}

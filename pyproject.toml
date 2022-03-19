@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "joker-and-the-queen"
+version = "0.1.0"
+description = ""
+authors = []
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+black = "^20.8b1"
+pytest = "^6.2.2"
+pylint = "^2.7.2"
+mypy = "^0.812"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
