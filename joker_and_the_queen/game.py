@@ -7,11 +7,12 @@ class Choice(Enum):
     """
     Choice of direction when laying a new card
     """
+
     HIGHER = auto()
     LOWER = auto()
     SAME = auto()
 
-    def flip(self) -> 'Choice':
+    def flip(self) -> "Choice":
         """
         Flip to the opposite direction
         """
@@ -26,6 +27,7 @@ class Game:
     """
     The state of the game board
     """
+
     def __init__(self, initial_cards: list[Card], initial_card_count: int = 9):
         if len(initial_cards) != initial_card_count:
             raise ValueError(f"Must start with {initial_card_count} cards")
@@ -36,33 +38,46 @@ class Game:
         """
         Attempt to add a card at a certain position
         """
+        current_card = self._get_current_card(position)
+        is_valid = self._check_valid_placement(current_card, card, choice)
+        self._board[position] = card if is_valid else None
+
+    def _check_valid_placement(
+        self, current_card: Card, card: Card, choice: Choice
+    ) -> bool:
+        # The card getting flipped is an ace
+        if card.rank is Rank.ACE:
+            return self._handle_flipped_ace(current_card, choice)
+
+        # Placing something on an ace after they're directed
+        # This is basically always correct in practice
+        # ...unless you went rogue and said "same"
+        # or forget the ace direction
+        if current_card.rank is Rank.ACE:
+            return self._handle_play_on_an_ace(choice)
+
+        return _get_correct_choice(card, current_card) == choice
+
+    def _handle_play_on_an_ace(self, choice: Choice) -> bool:
+        if self._aces_choice is None:
+            raise ValueError("Can't play on an ace until direction is determined")
+        return choice == self._aces_choice.flip()
+
+    def _handle_flipped_ace(self, current_card: Card, choice: Choice) -> bool:
+        if self._aces_choice is None:
+            if current_card.rank is Rank.ACE:
+                raise ValueError("Can't play on an ace until direction is determined")
+            self._aces_choice = choice
+            return True
+        # It's not the first ace
+        return choice == self._aces_choice
+
+    def _get_current_card(self, position: int) -> Card:
         assert 0 <= position <= len(self._board), "Must insert onto the board"
         current_card = self._board[position]
         if current_card is None:
             raise ValueError("Cannot insert onto a dead pile")
-
-        # Handle the first ace
-        if card.rank is Rank.ACE and self._aces_choice is None:
-            if current_card.rank is Rank.ACE:
-                raise ValueError("Can't play on an ace until direction is determined")
-            self._aces_choice = choice
-            self._board[position] = card
-            return
-
-        # Placing something on an ace after they're directed
-        if current_card.rank is Rank.ACE:
-            if self._aces_choice is None:
-                raise ValueError("Can't play on an ace until direction is determined")
-            self._board[position] = card if choice == self._aces_choice.flip() else None
-            return
-
-        # Subsequent aces
-        if card.rank is Rank.ACE:
-            self._board[position] = card if choice == self._aces_choice else None
-            return
-
-        correct_choice = _get_correct_choice(card, current_card)
-        self._board[position] = card if correct_choice == choice else None
+        return current_card
 
     @property
     def is_done(self) -> bool:
@@ -88,6 +103,9 @@ class Game:
 
 
 def _get_correct_choice(card: Card, board_card: Card) -> Choice:
+    """
+    Get the correct choice when neither card was an ace
+    """
     if card.rank == board_card.rank:
         return Choice.SAME
     return Choice.HIGHER if card.rank.value > board_card.rank.value else Choice.LOWER
