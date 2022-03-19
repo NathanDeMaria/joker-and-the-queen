@@ -8,6 +8,7 @@ class Suit(Enum):
     The suit of the card.
     This isn't actually useful unless you wanna be cute and ask, "which two"?
     """
+
     CLUBS = auto()
     DIAMONDS = auto()
     HEARTS = auto()
@@ -18,8 +19,8 @@ class Rank(Enum):
     """
     The value on the card
     """
-    ACE = 0
-    ONE = 1
+
+    ACE = 1
     TWO = 2
     THREE = 3
     FOUR = 4
@@ -38,6 +39,7 @@ class Card(NamedTuple):
     """
     A card in the deck
     """
+
     suit: Suit
     rank: Rank
 
