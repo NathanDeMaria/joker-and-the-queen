@@ -15,20 +15,20 @@ _SIMPLE_START = [
 
 
 def test_wrong_choice_closes_slot():
-    game = Game(_SIMPLE_START)
+    game = Game.start(_SIMPLE_START)
     game.add_card(Card(Suit.HEARTS, Rank.TEN), 0, Choice.LOWER)
     assert game.board[0] is None
 
 
 def test_correct_choice_sets_card():
-    game = Game(_SIMPLE_START)
+    game = Game.start(_SIMPLE_START)
     set_rank = Rank.TEN
     game.add_card(Card(Suit.HEARTS, set_rank), 0, Choice.HIGHER)
     assert game.board[0].rank == set_rank
 
 
 def test_place_on_a_decided_ace():
-    game = Game(_SIMPLE_START)
+    game = Game.start(_SIMPLE_START)
     position = 0
     # An ace is laid when saying "higher", so aces are high
     game.add_card(Card(Suit.HEARTS, Rank.ACE), position, Choice.HIGHER)
@@ -38,7 +38,7 @@ def test_place_on_a_decided_ace():
 
 
 def test_second_ace_appears():
-    game = Game(_SIMPLE_START)
+    game = Game.start(_SIMPLE_START)
     # An ace is laid when saying "higher", so aces are high
     game.add_card(Card(Suit.HEARTS, Rank.ACE), 0, Choice.HIGHER)
     # Second ace shows up when looking for a higher card is good

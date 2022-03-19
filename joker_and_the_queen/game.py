@@ -28,11 +28,16 @@ class Game:
     The state of the game board
     """
 
-    def __init__(self, initial_cards: list[Card], initial_card_count: int = 9):
-        if len(initial_cards) != initial_card_count:
-            raise ValueError(f"Must start with {initial_card_count} cards")
-        self._aces_choice: Choice | None = None
-        self._board: list[Card | None] = list(initial_cards)
+    def __init__(self, initial_cards: list[Card | None], aces_choice: Choice | None):
+        self._board: list[Card | None] = initial_cards
+        self._aces_choice: Choice | None = aces_choice
+
+    @classmethod
+    def start(cls, initial_cards: list[Card]) -> "Game":
+        """
+        Initialize a game
+        """
+        return cls(list(initial_cards), None)
 
     def add_card(self, card: Card, position: int, choice: Choice):
         """
