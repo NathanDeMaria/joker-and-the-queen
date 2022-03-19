@@ -89,7 +89,13 @@ class Game:
         """
         True if all of the piles are flipped
         """
-        return all(c is None for c in self._board)
+        if all(c is None for c in self._board):
+            # All are flipped
+            return True
+        # If it's only aces left, and aces haven't been directed yet, it's over?
+        if self._aces_choice is not None:
+            return False
+        return all(c is None or c.rank is Rank.ACE for c in self._board)
 
     @property
     def board(self) -> list[Card | None]:
