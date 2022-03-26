@@ -1,2 +1,2 @@
-from .ai import SimpleAI
+from .ai import SimpleAI, PerfectCountingAI
 from .play import play_game

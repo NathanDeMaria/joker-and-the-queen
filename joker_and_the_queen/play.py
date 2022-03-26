@@ -12,11 +12,14 @@ def play_game(decision_algorithm: Callable[[], BaseAI], n_cards: int = 9) -> int
     algorithm = decision_algorithm()
     deck = random_deck()
     first_board = [deck.pop() for _ in range(n_cards)]
+    for card in first_board:
+        algorithm.observe(card)
     game = Game.start(first_board)
     while deck:
-        card = deck.pop()
         choice, position = algorithm.decide(game)
+        card = deck.pop()
         game.add_card(card, position, choice)
+        algorithm.observe(card)
         if game.is_done:
             return len(deck)
     # 🎉 we made it through the whole deck
